@@ -1,0 +1,25 @@
+[build-system]
+requires = ["setuptools>=80.9.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "scrapper-service"
+version = "0.1.0"
+description = "Unified scrapper mock service"
+readme = "README.md"
+requires-python = ">=3.9"
+dependencies = [
+    "job-scrapper-contracts @ git+ssh://git@github.com/job-agent/job-scrapper-contracts.git@main",
+    "faker>=37.12.0"
+]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.black]
+line-length = 100
+target-version = ["py39"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py39"
