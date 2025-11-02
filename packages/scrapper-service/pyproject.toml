@@ -9,7 +9,7 @@ description = "Unified scrapper mock service"
 readme = "README.md"
 requires-python = ">=3.9"
 dependencies = [
-    "job-scrapper-contracts @ git+ssh://git@github.com/job-agent/job-scrapper-contracts.git@main",
+    "job-scrapper-contracts @ git+https://github.com/job-agent/job-scrapper-contracts.git@v0.1.0",
     "faker>=37.12.0"
 ]
 

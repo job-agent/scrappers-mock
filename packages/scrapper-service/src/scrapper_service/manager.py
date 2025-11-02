@@ -5,7 +5,8 @@ This module provides a unified interface that abstracts away multiple scrapper
 implementations, presenting them as a single scraping service.
 """
 
-from typing import List
+from datetime import datetime
+from typing import List, Optional
 
 from job_scrapper_contracts import Job, JobDict, ScrapperServiceInterface
 
@@ -26,7 +27,7 @@ class ScrapperManager(ScrapperServiceInterface):
         self,
         salary: int = 4000,
         employment: str = "remote",
-        page: int = 1,
+        posted_after: Optional[datetime] = None,
         timeout: int = 30
     ) -> List[Job]:
         """
@@ -38,7 +39,7 @@ class ScrapperManager(ScrapperServiceInterface):
         Args:
             salary: Minimum salary filter (default: 4000)
             employment: Employment type filter (default: "remote")
-            page: Page number for pagination (default: 1)
+            posted_after: Only return jobs posted after this datetime (default: None, returns all jobs)
             timeout: Request timeout in seconds (default: 30)
 
         Returns:
@@ -48,8 +49,10 @@ class ScrapperManager(ScrapperServiceInterface):
             Exception: If any scrapper fails and no results can be returned
 
         Example:
+            >>> from datetime import datetime, timedelta
             >>> manager = ScrapperManager()
-            >>> jobs = manager.scrape_jobs(salary=5000)
+            >>> cutoff_date = datetime.now() - timedelta(days=7)
+            >>> jobs = manager.scrape_jobs(salary=5000, posted_after=cutoff_date)
             >>> print(f"Found {len(jobs)} jobs total")
         """
         # Return mocked data for testing
@@ -59,7 +62,7 @@ class ScrapperManager(ScrapperServiceInterface):
         self,
         salary: int = 4000,
         employment: str = "remote",
-        page: int = 1,
+        posted_after: Optional[datetime] = None,
         timeout: int = 30
     ) -> List[JobDict]:
         """
@@ -71,14 +74,16 @@ class ScrapperManager(ScrapperServiceInterface):
         Args:
             salary: Minimum salary filter (default: 4000)
             employment: Employment type filter (default: "remote")
-            page: Page number for pagination (default: 1)
+            posted_after: Only return jobs posted after this datetime (default: None, returns all jobs)
             timeout: Request timeout in seconds (default: 30)
 
         Returns:
             Combined list of job dictionaries from all sources
 
         Example:
-            >>> jobs = manager.scrape_jobs_as_dicts(salary=5000)
+            >>> from datetime import datetime, timedelta
+            >>> cutoff_date = datetime.now() - timedelta(days=7)
+            >>> jobs = manager.scrape_jobs_as_dicts(salary=5000, posted_after=cutoff_date)
         """
         # Return mocked data for testing
         return get_mock_jobs_as_dicts()
