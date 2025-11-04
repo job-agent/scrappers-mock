@@ -4,12 +4,12 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "scrapper-service"
-version = "0.1.0"
+version = "0.1.1"
 description = "Unified scrapper mock service"
 readme = "README.md"
 requires-python = ">=3.9"
 dependencies = [
-    "job-scrapper-contracts @ git+https://github.com/job-agent/job-scrapper-contracts.git@v0.1.0",
+    "job-scrapper-contracts @ git+https://github.com/job-agent/job-scrapper-contracts.git@v0.1.1",
     "faker>=37.12.0"
 ]
 
