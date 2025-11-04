@@ -1,8 +1,10 @@
 """
-Scrapper Manager - Centralized service to handle all job scrappers
+Mock scrapper service that mimics the production-facing manager interface.
 
-This module provides a unified interface that abstracts away multiple scrapper
-implementations, presenting them as a single scraping service.
+The module exposes a concrete `ScrapperServiceInterface` implementation that
+delegates to the local mock data helpers in `jobs_data`. It keeps the public API
+identical to the real service while returning deterministic, in-memory records
+for documentation, demos, and automated tests.
 """
 
 from datetime import datetime
@@ -13,14 +15,14 @@ from job_scrapper_contracts import Job, JobDict, ScrapperServiceInterface
 from .jobs_data import get_mock_jobs, get_mock_jobs_as_dicts
 
 
-
 class ScrapperManager(ScrapperServiceInterface):
     """
-    Unified job scraping service that aggregates results from multiple sources.
+    Facade that returns mock job listings while honouring the production contract.
 
-    This class implements ScrapperServiceInterface and hides the complexity of managing
-    multiple scrapper implementations. Users interact with a single, simple interface
-    without needing to know about individual scrapper sources.
+    The manager accepts the same signature as the real scrapper service so client code
+    can exercise the integration without hitting network providers. Internally it
+    proxies to `get_mock_jobs` and `get_mock_jobs_as_dicts`, ignoring filter arguments
+    and always serving the static dataset.
     """
 
     def scrape_jobs(
@@ -28,34 +30,29 @@ class ScrapperManager(ScrapperServiceInterface):
         salary: int = 4000,
         employment: str = "remote",
         posted_after: Optional[datetime] = None,
-        timeout: int = 30
+        timeout: int = 30,
     ) -> List[Job]:
         """
-        Scrape jobs from all registered sources and return unified results.
+        Return the mock job listings as concrete `Job` instances.
 
-        This method aggregates jobs from all scrapper implementations transparently,
-        hiding the complexity of multiple data sources from the user.
+        The parameters mirror the production service to keep client integrations intact,
+        yet the mock ignores every filter and simply relays the static payload from
+        `get_mock_jobs`. The helper will raise a `ValueError` if the fake payload cannot
+        be materialised as `Job` objects.
 
         Args:
-            salary: Minimum salary filter (default: 4000)
-            employment: Employment type filter (default: "remote")
-            posted_after: Only return jobs posted after this datetime (default: None, returns all jobs)
-            timeout: Request timeout in seconds (default: 30)
+            salary: Part of the public contract; unused by the mock implementation.
+            employment: Part of the public contract; unused by the mock implementation.
+            posted_after: Part of the public contract; unused by the mock implementation.
+            timeout: Part of the public contract; unused by the mock implementation.
 
         Returns:
-            Combined list of Job objects from all sources
+            List of `Job` instances generated from the mock dataset.
 
         Raises:
-            Exception: If any scrapper fails and no results can be returned
-
-        Example:
-            >>> from datetime import datetime, timedelta
-            >>> manager = ScrapperManager()
-            >>> cutoff_date = datetime.now() - timedelta(days=7)
-            >>> jobs = manager.scrape_jobs(salary=5000, posted_after=cutoff_date)
-            >>> print(f"Found {len(jobs)} jobs total")
+            ValueError: Propagated from `get_mock_jobs` when the conversion to `Job`
+                fails for any generated record.
         """
-        # Return mocked data for testing
         return get_mock_jobs()
 
     def scrape_jobs_as_dicts(
@@ -63,27 +60,22 @@ class ScrapperManager(ScrapperServiceInterface):
         salary: int = 4000,
         employment: str = "remote",
         posted_after: Optional[datetime] = None,
-        timeout: int = 30
+        timeout: int = 30,
     ) -> List[JobDict]:
         """
-        Scrape jobs from all sources and return as dictionaries.
+        Return the mock job listings in serialisable dictionary form.
 
-        This method aggregates jobs from all scrapper implementations and returns
-        them as dictionaries, useful for JSON serialization or API responses.
+        Just like `scrape_jobs`, the method keeps the production call signature so
+        downstream code can test error handling and data flows. The mock ignores the
+        parameters and relays the dictionaries produced by `get_mock_jobs_as_dicts`.
 
         Args:
-            salary: Minimum salary filter (default: 4000)
-            employment: Employment type filter (default: "remote")
-            posted_after: Only return jobs posted after this datetime (default: None, returns all jobs)
-            timeout: Request timeout in seconds (default: 30)
+            salary: Part of the public contract; unused by the mock implementation.
+            employment: Part of the public contract; unused by the mock implementation.
+            posted_after: Part of the public contract; unused by the mock implementation.
+            timeout: Part of the public contract; unused by the mock implementation.
 
         Returns:
-            Combined list of job dictionaries from all sources
-
-        Example:
-            >>> from datetime import datetime, timedelta
-            >>> cutoff_date = datetime.now() - timedelta(days=7)
-            >>> jobs = manager.scrape_jobs_as_dicts(salary=5000, posted_after=cutoff_date)
+            List of dictionaries that share the schema of production job payloads.
         """
-        # Return mocked data for testing
         return get_mock_jobs_as_dicts()
