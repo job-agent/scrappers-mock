@@ -1,0 +1,18 @@
+services:
+  scrapper_service_mock:
+    build:
+      context: .
+      dockerfile: packages/scrapper-service/Dockerfile
+      ssh:
+        - default
+    container_name: scrapper-service-mock
+    environment:
+      RABBITMQ_URL: amqp://${RABBITMQ_USER}:${RABBITMQ_PASSWORD}@job-agent-rabbitmq:5672${RABBITMQ_VHOST}
+    networks:
+      - job-agent-network
+    restart: unless-stopped
+
+networks:
+  job-agent-network:
+    external: true
+    name: job-agent-network
