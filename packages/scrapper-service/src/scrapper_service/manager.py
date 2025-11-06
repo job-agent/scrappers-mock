@@ -8,11 +8,11 @@ for documentation, demos, and automated tests.
 """
 
 from datetime import datetime
-from typing import List, Optional
+from typing import Callable, List, Optional
 
-from job_scrapper_contracts import Job, JobDict, ScrapperServiceInterface
+from job_scrapper_contracts import Job, ScrapperServiceInterface
 
-from .jobs_data import get_mock_jobs, get_mock_jobs_as_dicts
+from .jobs_data import get_mock_jobs
 
 
 class ScrapperManager(ScrapperServiceInterface):
@@ -31,6 +31,8 @@ class ScrapperManager(ScrapperServiceInterface):
         employment: str = "remote",
         posted_after: Optional[datetime] = None,
         timeout: int = 30,
+        batch_size: int = 50,
+        on_jobs_batch: Optional[Callable[[List[Job], bool], None]] = None,
     ) -> List[Job]:
         """
         Return the mock job listings as concrete `Job` instances.
@@ -45,6 +47,8 @@ class ScrapperManager(ScrapperServiceInterface):
             employment: Part of the public contract; unused by the mock implementation.
             posted_after: Part of the public contract; unused by the mock implementation.
             timeout: Part of the public contract; unused by the mock implementation.
+            batch_size: Controls the number of jobs forwarded to the callback.
+            on_jobs_batch: Optional callback receiving each emitted batch and a final flag.
 
         Returns:
             List of `Job` instances generated from the mock dataset.
@@ -53,29 +57,22 @@ class ScrapperManager(ScrapperServiceInterface):
             ValueError: Propagated from `get_mock_jobs` when the conversion to `Job`
                 fails for any generated record.
         """
-        return get_mock_jobs()
+        jobs = get_mock_jobs()
+        if not on_jobs_batch:
+            return jobs
 
-    def scrape_jobs_as_dicts(
-        self,
-        salary: int = 4000,
-        employment: str = "remote",
-        posted_after: Optional[datetime] = None,
-        timeout: int = 30,
-    ) -> List[JobDict]:
-        """
-        Return the mock job listings in serialisable dictionary form.
+        effective_batch_size = batch_size if batch_size and batch_size > 0 else max(len(jobs), 1)
+        buffer: List[Job] = []
 
-        Just like `scrape_jobs`, the method keeps the production call signature so
-        downstream code can test error handling and data flows. The mock ignores the
-        parameters and relays the dictionaries produced by `get_mock_jobs_as_dicts`.
+        for job in jobs:
+            buffer.append(job)
+            if len(buffer) == effective_batch_size:
+                on_jobs_batch(list(buffer), False)
+                buffer.clear()
 
-        Args:
-            salary: Part of the public contract; unused by the mock implementation.
-            employment: Part of the public contract; unused by the mock implementation.
-            posted_after: Part of the public contract; unused by the mock implementation.
-            timeout: Part of the public contract; unused by the mock implementation.
+        if buffer:
+            on_jobs_batch(list(buffer), True)
+        else:
+            on_jobs_batch([], True)
 
-        Returns:
-            List of dictionaries that share the schema of production job payloads.
-        """
-        return get_mock_jobs_as_dicts()
+        return jobs

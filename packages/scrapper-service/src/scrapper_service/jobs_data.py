@@ -7,11 +7,12 @@ fresh identifiers while preserving a predictable schema that mirrors production
 responses.
 """
 
+from datetime import datetime
 from typing import List
 
 from faker import Faker
 
-from job_scrapper_contracts import Job, JobDict
+from job_scrapper_contracts import Company, Job, JobDict, Location, Salary
 
 faker = Faker()
 
@@ -203,10 +204,47 @@ def get_mock_jobs() -> List[Job]:
     jobs = []
     for job_dict in job_dicts:
         try:
-            if hasattr(Job, "from_dict"):
-                jobs.append(Job.from_dict(job_dict))
-            else:
-                jobs.append(Job(**job_dict))
+            company_data = job_dict["company"]
+            company = Company(
+                name=company_data["name"],
+                website=company_data.get("website"),
+            )
+
+            salary = None
+            salary_data = job_dict.get("salary")
+            if salary_data:
+                salary = Salary(
+                    currency=salary_data["currency"],
+                    min_value=salary_data.get("min_value"),
+                    max_value=salary_data.get("max_value"),
+                )
+
+            location = None
+            location_data = job_dict.get("location")
+            if location_data:
+                location = Location(
+                    region=location_data.get("region"),
+                    is_remote=location_data.get("is_remote", False),
+                    can_apply=location_data.get("can_apply"),
+                )
+
+            jobs.append(
+                Job(
+                    job_id=job_dict["job_id"],
+                    title=job_dict["title"],
+                    url=job_dict["url"],
+                    description=job_dict["description"],
+                    company=company,
+                    category=job_dict["category"],
+                    date_posted=datetime.fromisoformat(job_dict["date_posted"]),
+                    valid_through=datetime.fromisoformat(job_dict["valid_through"]),
+                    employment_type=job_dict["employment_type"],
+                    salary=salary,
+                    experience_months=job_dict.get("experience_months"),
+                    location=location,
+                    industry=job_dict.get("industry"),
+                )
+            )
         except Exception as e:
             raise ValueError(f"Failed to convert job dict to Job instance: {e}")
 

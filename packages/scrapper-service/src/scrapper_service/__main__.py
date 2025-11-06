@@ -4,7 +4,10 @@ import argparse
 import logging
 import sys
 
-from scrapper_service.messaging.consumer import ScrapperConsumer
+from dotenv import load_dotenv
+
+from scrapper_messaging.consumer import ScrapperConsumer
+from scrapper_service.manager import ScrapperManager
 
 
 def setup_logging(log_level: str = "INFO") -> None:
@@ -22,6 +25,7 @@ def setup_logging(log_level: str = "INFO") -> None:
 
 def main() -> None:
     """Main entry point for scrapper-service-mock."""
+    load_dotenv()
     parser = argparse.ArgumentParser(description="Scrapper Service Mock - RabbitMQ Consumer")
     parser.add_argument(
         "--rabbitmq-url",
@@ -39,15 +43,14 @@ def main() -> None:
 
     args = parser.parse_args()
 
-    # Setup logging
     setup_logging(args.log_level)
 
     logger = logging.getLogger(__name__)
     logger.info("Starting Scrapper Service Mock...")
 
     try:
-        # Create and start consumer
-        consumer = ScrapperConsumer(rabbitmq_url=args.rabbitmq_url)
+        service = ScrapperManager()
+        consumer = ScrapperConsumer(service=service, rabbitmq_url=args.rabbitmq_url)
         consumer.start()
     except KeyboardInterrupt:
         logger.info("Received interrupt signal, shutting down...")
