@@ -27,8 +27,8 @@ class ScrapperManager(ScrapperServiceInterface):
 
     def scrape_jobs(
         self,
-        salary: int = 4000,
-        employment: str = "remote",
+        min_salary: int = 4000,
+        employment_location: str = "remote",
         posted_after: Optional[datetime] = None,
         timeout: int = 30,
         batch_size: int = 50,
@@ -43,8 +43,8 @@ class ScrapperManager(ScrapperServiceInterface):
         be materialised as `Job` objects.
 
         Args:
-            salary: Part of the public contract; unused by the mock implementation.
-            employment: Part of the public contract; unused by the mock implementation.
+            min_salary: Part of the public contract; unused by the mock implementation.
+            employment_location: Part of the public contract; unused by the mock implementation.
             posted_after: Part of the public contract; unused by the mock implementation.
             timeout: Part of the public contract; unused by the mock implementation.
             batch_size: Controls the number of jobs forwarded to the callback.
