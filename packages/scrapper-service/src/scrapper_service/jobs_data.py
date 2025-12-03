@@ -40,6 +40,7 @@ def get_mock_jobs_as_dicts() -> List[JobDict]:
             "location": {"region": "Poland", "is_remote": True, "can_apply": False},
             "experience_months": 48.0,
             "industry": "software",
+            "source": "mock",
         },
         {
             "job_id": faker.random_int(),
@@ -49,7 +50,7 @@ def get_mock_jobs_as_dicts() -> List[JobDict]:
                 "We are looking for a Full-stack Engineer experienced with Node.js, Nest.js, and React "
                 "to join our growing product team. You will build scalable web applications, design robust APIs, "
                 "and implement responsive UIs. Our stack includes TypeScript, MongoDB, and Redis for caching and background jobs. "
-                "You’ll collaborate closely with backend and frontend engineers to deliver high-performance, maintainable software. "
+                "You'll collaborate closely with backend and frontend engineers to deliver high-performance, maintainable software. "
                 "Strong understanding of REST, microservices, and modern frontend development is expected."
             ),
             "company": {"name": faker.company(), "website": faker.url()},
@@ -61,6 +62,7 @@ def get_mock_jobs_as_dicts() -> List[JobDict]:
             "location": {"region": "Poland", "is_remote": True, "can_apply": True},
             "experience_months": 36.0,
             "industry": "software development",
+            "source": "mock",
         },
         {
             "job_id": faker.random_int(),
@@ -76,6 +78,7 @@ def get_mock_jobs_as_dicts() -> List[JobDict]:
             "location": {"region": "Ukraine", "is_remote": True, "can_apply": True},
             "experience_months": 60.0,
             "industry": "cloud",
+            "source": "mock",
         },
         {
             "job_id": faker.random_int(),
@@ -91,6 +94,7 @@ def get_mock_jobs_as_dicts() -> List[JobDict]:
             "location": {"region": "Portugal", "is_remote": True, "can_apply": True},
             "experience_months": 36.0,
             "industry": "software",
+            "source": "mock",
         },
         {
             "job_id": faker.random_int(),
@@ -106,6 +110,7 @@ def get_mock_jobs_as_dicts() -> List[JobDict]:
             "location": {"region": "USA", "is_remote": True, "can_apply": True},
             "experience_months": 72.0,
             "industry": "artificial intelligence",
+            "source": "mock",
         },
         {
             "job_id": faker.random_int(),
@@ -121,6 +126,7 @@ def get_mock_jobs_as_dicts() -> List[JobDict]:
             "location": {"region": "Romania", "is_remote": False, "can_apply": True},
             "experience_months": 48.0,
             "industry": "education",
+            "source": "mock",
         },
         {
             "job_id": faker.random_int(),
@@ -142,6 +148,7 @@ def get_mock_jobs_as_dicts() -> List[JobDict]:
             "location": {"region": "Ukraine", "is_remote": True, "can_apply": True},
             "experience_months": 48.0,
             "industry": "artificial intelligence",
+            "source": "mock",
         },
         {
             "job_id": faker.random_int(),
@@ -157,6 +164,7 @@ def get_mock_jobs_as_dicts() -> List[JobDict]:
             "location": {"region": "Ukraine", "is_remote": False, "can_apply": True},
             "experience_months": 24.0,
             "industry": "design",
+            "source": "mock",
         },
         {
             "job_id": faker.random_int(),
@@ -172,6 +180,7 @@ def get_mock_jobs_as_dicts() -> List[JobDict]:
             "location": {"region": "United Kingdom", "is_remote": True, "can_apply": True},
             "experience_months": 48.0,
             "industry": "saas",
+            "source": "mock",
         },
         {
             "job_id": faker.random_int(),
@@ -187,6 +196,7 @@ def get_mock_jobs_as_dicts() -> List[JobDict]:
             "location": {"region": "Ukraine", "is_remote": True, "can_apply": True},
             "experience_months": 24.0,
             "industry": "marketing",
+            "source": "mock",
         },
     ]
 
@@ -235,10 +245,11 @@ def get_mock_jobs() -> List[Job]:
                     url=job_dict["url"],
                     description=job_dict["description"],
                     company=company,
-                    category=job_dict["category"],
+                    category=job_dict.get("category"),
                     date_posted=datetime.fromisoformat(job_dict["date_posted"]),
                     valid_through=datetime.fromisoformat(job_dict["valid_through"]),
                     employment_type=job_dict["employment_type"],
+                    source=job_dict["source"],
                     salary=salary,
                     experience_months=job_dict.get("experience_months"),
                     location=location,
