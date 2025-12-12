@@ -6,7 +6,7 @@ import sys
 
 from dotenv import load_dotenv
 
-from scrapper_messaging.consumer import ScrapperConsumer
+from scrapper_messaging import ScrapperConsumer
 from scrapper_service.manager import ScrapperManager
 
 
@@ -50,7 +50,7 @@ def main() -> None:
 
     try:
         service = ScrapperManager()
-        consumer = ScrapperConsumer(service=service, rabbitmq_url=args.rabbitmq_url)
+        consumer = ScrapperConsumer.from_url(service, args.rabbitmq_url)
         consumer.start()
     except KeyboardInterrupt:
         logger.info("Received interrupt signal, shutting down...")
