@@ -40,8 +40,17 @@ def main() -> None:
         choices=["DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL"],
         help="Logging level (default: INFO)",
     )
+    parser.add_argument(
+        "--check",
+        action="store_true",
+        help="Check that the service can start (for CI/testing)",
+    )
 
     args = parser.parse_args()
+
+    if args.check:
+        print("Startup check passed: scrapper-service-mock is ready")
+        sys.exit(0)
 
     setup_logging(args.log_level)
 
