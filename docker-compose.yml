@@ -6,6 +6,14 @@ services:
     container_name: scrapper-service-mock
     environment:
       RABBITMQ_URL: amqp://${RABBITMQ_USER}:${RABBITMQ_PASSWORD}@job-agent-rabbitmq:5672${RABBITMQ_VHOST}
+      # OpenTelemetry configuration
+      OTEL_SERVICE_NAME: scrapper-service-mock
+      OTEL_SERVICE_VERSION: ${OTEL_SERVICE_VERSION:-0.1.0}
+      OTEL_DEPLOYMENT_ENVIRONMENT: ${OTEL_DEPLOYMENT_ENVIRONMENT:-development}
+      OTEL_ENABLED: ${OTEL_ENABLED:-true}
+      OTEL_EXPORTER_CONSOLE_ENABLED: ${OTEL_EXPORTER_CONSOLE_ENABLED:-true}
+      OTEL_TRACES_SAMPLER: ${OTEL_TRACES_SAMPLER:-parentbased_always_on}
+      OTEL_TRACES_SAMPLER_ARG: ${OTEL_TRACES_SAMPLER_ARG:-1.0}
     networks:
       - job-agent-network
     restart: unless-stopped

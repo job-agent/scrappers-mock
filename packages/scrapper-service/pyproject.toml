@@ -13,7 +13,9 @@ dependencies = [
     "faker>=37.12.0",
     "pika>=1.3.2",
     "python-dotenv>=1.2.1",
-    "scrapper-messaging @ git+https://github.com/job-agent/scrapper-messaging.git@main"
+    "scrapper-messaging @ git+https://github.com/job-agent/scrapper-messaging.git@main",
+    # Telemetry for distributed tracing (from shared/telemetry)
+    "telemetry @ git+https://github.com/job-agent/shared.git@main#subdirectory=telemetry",
 ]
 
 [project.optional-dependencies]
