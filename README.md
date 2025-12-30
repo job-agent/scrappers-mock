@@ -8,8 +8,8 @@ The scrappers-mock service implements the same `ScrapperServiceInterface` as the
 
 **Key features:**
 
-- Contract-compatible with production scrappers (uses `job-scrapper-contracts`)
-- RabbitMQ-based communication (uses `scrapper-messaging`)
+- Contract-compatible with production scrappers (uses `shared/job-scrapper-contracts`)
+- RabbitMQ-based communication (uses `shared/scrapper-messaging`)
 - Deterministic schema with dynamic identifiers via Faker
 - Docker-ready for easy deployment
 - Interchangeable with real scrappers at runtime
@@ -145,7 +145,7 @@ cd ../scrappers-mock && docker compose up -d
 # Or reverse to use real scrapper
 ```
 
-Both services implement the `ScrapperServiceInterface` from `job-scrapper-contracts` and communicate via the same RabbitMQ queues, making them transparent to the job-agent-platform.
+Both services implement the `ScrapperServiceInterface` from `shared/job-scrapper-contracts` and communicate via the same RabbitMQ queues, making them transparent to the job-agent-platform.
 
 ### Communication Flow
 
@@ -156,8 +156,8 @@ Both services implement the `ScrapperServiceInterface` from `job-scrapper-contra
 
 ### Dependencies
 
-- **job-scrapper-contracts**: Shared data models (`Job`, `Company`, `Salary`, `Location`, `ScrapeJobsFilter`)
-- **scrapper-messaging**: RabbitMQ consumer/producer utilities (`ScrapperConsumer`)
+- **shared/job-scrapper-contracts**: Shared data models (`Job`, `Company`, `Salary`, `Location`, `ScrapeJobsFilter`)
+- **shared/scrapper-messaging**: RabbitMQ consumer/producer utilities (`ScrapperConsumer`)
 
 Both dependencies are fetched from public GitHub repositories during installation.
 
