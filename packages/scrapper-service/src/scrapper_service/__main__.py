@@ -8,6 +8,7 @@ from dotenv import load_dotenv
 
 from scrapper_messaging import ScrapperConsumer
 from scrapper_service.manager import ScrapperManager
+from telemetry import init_telemetry
 
 
 def setup_logging(log_level: str = "INFO") -> None:
@@ -55,6 +56,14 @@ def main() -> None:
     setup_logging(args.log_level)
 
     logger = logging.getLogger(__name__)
+
+    # Initialize OpenTelemetry for distributed tracing
+    try:
+        init_telemetry(service_name="scrapper-service-mock")
+        logger.info("OpenTelemetry telemetry initialized")
+    except Exception as e:
+        logger.warning("Failed to initialize telemetry: %s", e)
+
     logger.info("Starting Scrapper Service Mock...")
 
     try:
