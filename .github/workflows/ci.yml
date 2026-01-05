@@ -56,7 +56,7 @@ jobs:
   quality-tests:
     name: Quality Tests (Type Checking)
     runs-on: ubuntu-latest
-    needs: lint
+    needs: [lint, security-audit]
     steps:
       - uses: actions/checkout@v6
 
