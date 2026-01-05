@@ -33,12 +33,11 @@ scrappers-mock/
 │   ├── lint_and_format.sh          # Run ruff linter/formatter
 │   ├── create-worktree.sh          # Create git worktree for development
 │   └── delete-worktree.sh          # Clean up git worktree
-├── smoke_tests/
-│   ├── conftest.py                 # Pytest fixtures
-│   └── test_type_checking.py       # Type checking smoke tests
+├── quality_tests/                   # Type checking tests
+│   └── conftest.py                 # Pytest fixtures
 ├── .github/
 │   └── workflows/
-│       └── ci.yml                  # CI pipeline (lint, smoke tests, Docker)
+│       └── ci.yml                  # CI pipeline (lint, quality tests, Docker)
 ├── docker-compose.yml              # Service deployment configuration
 ├── pyproject.toml                  # Root project configuration
 ├── .env.example                    # Environment variables template
@@ -203,8 +202,8 @@ This runs `ruff check --fix` followed by `ruff format`.
 ### Running Tests
 
 ```bash
-# Run smoke tests (type checking)
-pytest -m smoke -v smoke_tests/
+# Run quality tests (type checking)
+pytest -m quality -v quality_tests/
 
 # Run all tests
 pytest
@@ -222,7 +221,7 @@ mypy src/scrapper_service --ignore-missing-imports
 The GitHub Actions workflow (`.github/workflows/ci.yml`) runs on pushes and PRs to `main` and `development` branches:
 
 1. **Lint**: Runs ruff check and format verification
-2. **Smoke Tests**: Installs packages and runs mypy type checking
+2. **Quality Tests**: Installs packages and runs mypy type checking
 3. **Docker Startup Test**: Builds the Docker image and verifies container startup
 
 ## License
