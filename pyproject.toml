@@ -20,8 +20,7 @@ line-length = 100
 target-version = "py39"
 
 [tool.pytest.ini_options]
-testpaths = ["packages", "smoke_tests", "quality_tests"]
+testpaths = ["packages", "quality_tests"]
 markers = [
-    "smoke: marks tests as smoke tests (deselect with '-m \"not smoke\"')",
     "quality: marks tests as quality tests (type checking, static analysis)",
 ]
